@@ -6,14 +6,23 @@ const login = ()=>{
     console.log(`test: email ${email} password ${password}`)
     loginstatus = "advisor";//call api here
 
-    if(email.toLowerCase() == "lead")
-    {
-        window.location.replace("./leadadvisor.html")
+    if(email == "lead"){
+        loginstatus="lead"
     }
 
-    if(loginstatus == "advisor"){
-        console.log("successful")
-//        window.location.replace("http://www.w3schools.com")        
+
+    localStorage.setItem("AASaccounttype", loginstatus)
+    localStorage.setItem("AASemail", email)
+    localStorage.setItem("AASpassword", password)
+    console.log("local storage should be set")
+    if(loginstatus == "lead")
+    {
+        window.location.replace(`./leadadvisor.html`)
+    }
+
+    else if(loginstatus == "advisor")
+    {
+        window.location.replace(`./advisor.html`)
     }
     else{
         alert("incorrect username or password")
