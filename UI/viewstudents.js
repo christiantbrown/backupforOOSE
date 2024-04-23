@@ -9,13 +9,13 @@ const students = [
         FirstName:"John",
         LastName:"Smith",
         AdvisorName:email,
-        Cell:2132132134
+        ID:2132132134
     },
     {
         FirstName:"Jake",
         LastName:"Paul",
         AdvisorName:email,
-        Cell:2223334444
+        ID:2223334444
     }
 
 ];//replace this with an API request
@@ -39,6 +39,8 @@ students.map((student)=>{
     studentButton.innerHTML="Select";
     studentButton.addEventListener("click", ()=>{
         console.log(`${student.FirstName}, ${student.LastName}`);
+        localStorage.setItem("selectedStudent", student.ID)
+        window.location.replace("./createappointment.html")
     });
     studentElem.appendChild(studentButton);
 

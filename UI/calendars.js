@@ -93,3 +93,31 @@ const submitNewTimeSlot = () => {
 
     window.location.replace(`./addtimeslot.html`)
 }
+
+const showUpcomingAppointments = () => {
+
+    const appointmentList = document.getElementById("appointments")
+
+    const appointments = getAppointments(email)
+
+    appointments.map( (appt) => {
+        apptDescription=document.createElement("div")
+        apptDescription.textContent=`${appt.studentLastName}, ${appt.studentFirstName}\n
+        ${appt.startTime.toDateString()} ${appt.startTime.getHours()}:${appt.startTime.getMinutes()} - ${appt.endTime.getHours()}:${appt.endTime.getMinutes()}`
+        apptDescription.classList.add("timeelement")
+        appointmentList.appendChild(apptDescription)
+    })
+}
+
+const submitNewAppointment = () => {
+    date=document.getElementById("date").value
+    startTime=document.getElementById("startTime").value
+    endTime=document.getElementById("endTime").value
+    description=document.getElementById("description").value
+    
+    console.log(`${date} ${startTime} ${endTime}`)
+
+    document.getElementById("appointments").innerHTML=''    //a cheap way of killing all children of this node
+
+    showUpcomingAppointments()
+}
