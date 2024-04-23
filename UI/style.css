@@ -68,3 +68,14 @@ body{
     background-color: #aaaaaa;
     border-radius:5px;
 }
+.timeslotpopup{
+    visibility: hidden;
+    width:30vw;
+    background-color: #aaaaaa;
+    margin:25px;
+    border:10px;
+    border-radius: 5px;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}

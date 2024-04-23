@@ -21,14 +21,29 @@
         <button class="orangebutton">Log Out</button>
         <img src="uta-logo-new.png">
     </div>
-    <script src="calendars.js"></script>
+
 
     <div id="time slots" class="timelist">
         Time Slots
     </div>
-    <script>showUpcomingTimeSlots()</script>
-    <button class="orangebutton">Add Time Slot</button>
+    <button class="orangebutton" id="addTimeSlotButton">Add Time Slot</button>
+    <div id="timeslotpopup" class="timeslotpopup">
+        <span style="align-content: center;">
+            <input class="center textinput" type="text" id="date" placeholder="YYYY-MM-DD" required><br> 
+            <input class="center textinput" type="text" id="startTime" placeholder="HH:mm" required><br> 
+            <input class="center textinput" type="text" id="endTime" placeholder="HH:mm" required><br>
+        </span>
+        <button class="orangebutton" id="createNewTimeSlotButton" style="float:right;">Create Time Slot</button>
+    </div>
+    <script src="calendars.js"></script>
+    <script>
+        showUpcomingTimeSlots();
+        document.getElementById("addTimeSlotButton").addEventListener("click", ()=>{
+            document.getElementById("timeslotpopup").style.visibility="visible"
+        })
+        document.getElementById("createNewTimeSlotButton").addEventListener("click", submitNewTimeSlot)
 
+    </script>
 </body>
 
 </html>

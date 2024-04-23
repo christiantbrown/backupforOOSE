@@ -81,3 +81,15 @@ const showUpcomingTimeSlots = ()=>{
         timeSlotList.appendChild(slotDescription)
     })
 }
+
+
+const submitNewTimeSlot = () => {
+    date=document.getElementById("date").value
+    startTime=document.getElementById("startTime").value
+    endTime=document.getElementById("endTime").value
+    
+    console.log(`${date} ${startTime} ${endTime}`)
+    //make an api call here, wait for status code, then redirect
+
+    window.location.replace(`./addtimeslot.html`)
+}
