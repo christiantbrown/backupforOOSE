@@ -15,24 +15,20 @@
         }
     </style>
 </head>
-<body>
 
-    <h1 id="hello" style="color:white;"></h1>
+<body>
     <div class="topmenu">
         <button class="orangebutton">Log Out</button>
         <img src="uta-logo-new.png">
     </div>
-    <div class="buttonlist">
-        <a href="addtimeslot.html"><button class="orangebutton">View Calendar</button></a>
-        <a href="viewstudents.html"><button class="orangebutton">View Students</button></a>
-        <button class="orangebutton">Manage Availability</button>
+    <script src="calendars.js"></script>
+
+    <div id="time slots" class="timelist">
+        Time Slots
     </div>
-    <script src="./advisor.js"></script>    
+    <script>showUpcomingTimeSlots()</script>
+    <button class="orangebutton">Add Time Slot</button>
 
-
-    
 </body>
-
-
 
 </html>

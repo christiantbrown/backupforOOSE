@@ -55,3 +55,16 @@ body{
     width: 350px;
     height:125px;
 }
+.timelist{
+    background-color: gray;
+    width: 30vw;
+    text-align: center;
+    margin:25px;
+    border-radius: 5px;
+}
+.timeelement{
+    border:10px;
+    margin: 10px;
+    background-color: #aaaaaa;
+    border-radius:5px;
+}
