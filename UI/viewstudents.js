@@ -1,6 +1,6 @@
-const email = localStorage.getItem("AASemail")
-const password = localStorage.getItem("AASpassword")
-const accountType = localStorage.getItem("AASaccounttype")
+const email = localStorage.getItem("AASemail");
+const password = localStorage.getItem("AASpassword");
+const accountType = localStorage.getItem("AASaccounttype");
 
 
 //currently using dummy data
@@ -18,29 +18,28 @@ const students = [
         Cell:2223334444
     }
 
-]//replace this with an API request
+];//replace this with an API request
 
-studentList=document.getElementById("studentList")
+studentList=document.getElementById("studentList");
 
 students.map((student)=>{
-    const studentElem=document.createElement("div")
-    studentElem.classList.add("studententry")
-    studentElem.classList.add("center")
-    studentElem.style.alignContent="center"
-    studentElem.innerHTML=
-    `
-    ${student.FirstName}, ${student.LastName}
-    `
+    const studentElem=document.createElement("div");
+    studentElem.classList.add("studententry");
+    studentElem.classList.add("center");
+    studentElem.style.alignContent="center";
+    
+    const studentName = document.createElement("div"); // Create a new div for student name
+    studentName.classList.add("student-name");
+    studentName.textContent = `${student.FirstName}, ${student.LastName}`;
+    studentElem.appendChild(studentName); // Append student name div to student entry div
 
-
-
-    studentButton=document.createElement("button")
-    studentButton.classList.add("orangebutton")
-    studentButton.innerHTML="Select"
+    studentButton=document.createElement("button");
+    studentButton.classList.add("orangebutton");
+    studentButton.innerHTML="Select";
     studentButton.addEventListener("click", ()=>{
-        console.log(`${student.FirstName}, ${student.LastName}`)
-    })
-    studentElem.appendChild(studentButton)
+        console.log(`${student.FirstName}, ${student.LastName}`);
+    });
+    studentElem.appendChild(studentButton);
 
-    studentList.appendChild(studentElem)
+    studentList.appendChild(studentElem);
 })
