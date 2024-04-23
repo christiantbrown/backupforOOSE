@@ -28,13 +28,14 @@ students.map((student)=>{
     studentElem.classList.add("center");
     studentElem.style.alignContent="center";
     
-    const studentName = document.createElement("div"); // Create a new div for student name
+    const studentName = document.createElement("span"); // Create a new element for student name
     studentName.classList.add("student-name");
     studentName.textContent = `${student.FirstName}, ${student.LastName}`;
     studentElem.appendChild(studentName); // Append student name div to student entry div
 
     studentButton=document.createElement("button");
     studentButton.classList.add("orangebutton");
+    studentButton.style.float="right";
     studentButton.innerHTML="Select";
     studentButton.addEventListener("click", ()=>{
         console.log(`${student.FirstName}, ${student.LastName}`);
