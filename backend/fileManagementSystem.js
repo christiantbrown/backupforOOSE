@@ -2,8 +2,10 @@ const fs = require('fs');
 const Papa = require('papaparse');
 const express = require('express');
 const path = require('path');
+const cors = require('cors')
 const app = express();
-const port = process.env.PORT || 3000;
+app.use(cors())
+const port = 3000;
 
 app.use(express.json()); // Middleware to parse JSON bodies
 
@@ -59,13 +61,20 @@ app.get('/api/students', (req, res) => {
 });
 
 // Endpoint to get time slots data
-app.get('/api/timeslots', (req, res) => {
+app.get('/api/timeslots/:email', (req, res) => {
+
+    console.log(req.params.email)
+
     readAndParseCSV('timeSlots.csv', (err, data) => {
         if (err) {
             res.status(500).json({ error: 'Error reading CSV file' });
             return;
         }
-        res.json(data);
+        //delete this
+        data.map((d) => {
+            console.log(d)
+        })
+        res.json(data.filter((tslot)=>tslot.AdvisorEmail==req.params.email));
     });
 });
 

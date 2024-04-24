@@ -2,6 +2,8 @@ const email = localStorage.getItem("AASemail");
 const password = localStorage.getItem("AASpassword");
 const accountType = localStorage.getItem("AASaccounttype");
 
+const api_url = "127.0.0.1"
+const port=3000
 
 //currently using dummy data
 const students = [
