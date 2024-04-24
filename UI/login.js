@@ -1,7 +1,16 @@
 const api_url = "127.0.0.1"
 const port=3000
 
-const login = ()=>{
+
+const getLoginStatus = async (email, password) => {
+    loginstatus = await fetch(encodeURI(`http://${api_url}:${port}/api/login/${email}/${password}`), {
+        mode:"cors"
+    }).then((loginstatus)=>loginstatus.json())
+    console.log(loginstatus)
+    return loginstatus.status
+}
+
+const login = async ()=>{
 
 
     const email=document.getElementById("email").value
@@ -9,8 +18,9 @@ const login = ()=>{
 
 
     //IMPLEMENT API
-    loginstatus = "advisor";//call api here
-
+    console.log("waiting on login status")
+    loginstatus = await getLoginStatus(email, password)
+    console.log(`loginstatus:${loginstatus}`)
     if(email == "lead"){
         loginstatus="lead"
     }

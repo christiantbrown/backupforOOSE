@@ -27,6 +27,29 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'test.html'));
 });
 
+
+
+//check login validity
+app.get('/api/login/:email/:pwd', (req, res)=>{
+    readAndParseCSV('advisors.csv', (err, data) => {
+        if (err) {
+            res.status(500).json({ error: 'Error reading CSV file' })
+            return
+        }
+        advisor = (data.filter((advisor)=>advisor.email == req.params.email)[0])
+        if (!advisor || advisor.pwd != req.params.pwd){
+            loginstatus='invalid'
+        }
+        else{
+            loginstatus='advisor'
+        }
+        res.json({'status':loginstatus})
+        console.log(`login for ${req.params.email}, ${req.params.pwd} was counted as ${loginstatus}`)
+        console.log(advisor)
+    })
+})
+
+
 // Endpoint to get advisors data
 app.get('/api/advisors/:email', (req, res) => {
     readAndParseCSV('advisors.csv', (err, data) => {
