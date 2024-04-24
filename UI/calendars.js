@@ -1,3 +1,4 @@
+
 const email = localStorage.getItem("AASemail")
 const password = localStorage.getItem("AASpassword")
 const accountType = localStorage.getItem("AASaccounttype")
@@ -84,7 +85,7 @@ const getTimeSlots = async (advisorEmail) =>{
 //creates a list of upcoming time slots in the UI
 const showUpcomingTimeSlots = async ()=>{
     const timeSlotList = document.getElementById("time slots")
-
+    timeSlotList.innerHTML=''
     const timeSlots= await getTimeSlots(email)
 
 
@@ -99,13 +100,13 @@ const showUpcomingTimeSlots = async ()=>{
 
 const submitNewTimeSlot = () => {
     date=document.getElementById("date").value
-    StartTime=document.getElementById("StartTime").value
-    EndTime=document.getElementById("EndTime").value
+    StartTime=document.getElementById("startTime").value
+    EndTime=document.getElementById("endTime").value
     
     console.log(`${date} ${StartTime} ${EndTime}`)
     //make an api call here, wait for status code, then redirect
 
-    window.location.replace(`./addtimeslot.html`)
+    showUpcomingTimeSlots()
 }
 
 const showUpcomingAppointments = async () => {
