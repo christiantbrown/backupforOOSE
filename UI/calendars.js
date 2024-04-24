@@ -74,6 +74,13 @@ const getAdvisor = async(advisorEmail) =>{
     return advisor
 }
 
+const getStudent = async(studentID) => {
+    student = await fetch(encodeURI(`http://${api_url}:${port}/api/getstudent/${studentID}`), {
+        mode:"cors"
+    }).then((student)=>student.json())
+    return student
+}
+
 const getTimeSlots = async (advisorEmail) =>{
 
     //replace this with an API call
@@ -111,13 +118,16 @@ const submitNewTimeSlot = async () => {
     StartTime=document.getElementById("startTime").value
     EndTime=document.getElementById("endTime").value
     
+    if(!date || !StartTime || ! EndTime)
+    {
+        alert("enter all fields")
+        return
+    }
 
 
     console.log(`${date} ${StartTime} ${EndTime}`)
-    //make an api call here, wait for status code, then redirect
-    //start, end, fname, lname, email
 
-    advisor = await(getAdvisor(email))
+    const advisor = await(getAdvisor(email))
 
     res = await fetch(encodeURI(`http://${api_url}:${port}/api/timeslots`), {
         mode: "cors",
@@ -143,7 +153,7 @@ const submitNewTimeSlot = async () => {
 const showUpcomingAppointments = async () => {
 
     const appointmentList = document.getElementById("appointments")
-
+    appointmentList.innerHTML=''
     const appointments = await getAppointments(email)
 
     appointments.map( (appt) => {
@@ -157,15 +167,44 @@ const showUpcomingAppointments = async () => {
     })
 }
 
-const submitNewAppointment = () => {
+const submitNewAppointment = async () => {
     date=document.getElementById("date").value
-    StartTime=document.getElementById("StartTime").value
-    EndTime=document.getElementById("EndTime").value
+    StartTime=document.getElementById("startTime").value
+    EndTime=document.getElementById("endTime").value
     description=document.getElementById("description").value
-    
-    console.log(`${date} ${StartTime} ${EndTime}`)
 
-    document.getElementById("appointments").innerHTML=''    //a cheap way of killing all children of this node
+    if(!date || !StartTime || ! EndTime || !description)
+    {
+        alert("enter all fields")
+        return
+    }
+
+    const studentID = localStorage.getItem("selectedStudent")
+
+    const student = await getStudent(studentID)
+    const advisor = await getAdvisor(email)
+
+    res = await fetch(encodeURI(`http://${api_url}:${port}/api/appointments`), {
+        mode: "cors",
+        method: "POST",
+        "body":JSON.stringify({
+            "StartTime":`${date}T${StartTime}`,
+            "EndTime":`${date}T${EndTime}`,
+            "StudentFirstName":student.FirstName,
+            "StudentLastName":student.LastName,
+            "AdvisorFirstName":advisor.FirstName,
+            "AdvisorLastName":advisor.LastName,
+            "AdvisorEmail":email,
+            "AppointmentDescription":description,
+        }),
+        headers:{
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+    })
+    
+    console.log(res)
+
 
     showUpcomingAppointments()
 }

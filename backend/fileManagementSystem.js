@@ -38,6 +38,19 @@ app.get('/api/advisors/:email', (req, res) => {
     });
 });
 
+app.get('/api/getstudent/:studentid', (req, res) => {
+    readAndParseCSV('students.csv', (err, data) => {
+        if (err) {
+            res.status(500).json({ error: 'Error reading CSV file' });
+            return;
+        }
+        res.json(data.filter((student)=>student.IDnumber == req.params.studentid)[0]);
+    });
+});
+
+
+
+
 // Endpoint to get appointments data
 app.get('/api/appointments/:email', (req, res) => {
     readAndParseCSV('appointments.csv', (err, data) => {
@@ -75,43 +88,39 @@ app.get('/api/timeslots/:email', (req, res) => {
     });
 });
 
-// Endpoint to create an appointment
-app.post('/api/appointments', (req, res) => {
-  const { studentId, startTime, endTime, advisorEmail, appointmentDescription } = req.body;
 
-  // Validate input to ensure all required fields are present
-  if (!studentId || !startTime || !endTime || !advisorEmail || !appointmentDescription) {
-      return res.status(400).json({ message: "Missing required fields: studentId, startTime, endTime, advisorEmail, and appointmentDescription are all required." });
-  }
 
-  // Functions to find entities by identifiers
-  const student = findStudentById(studentId);
-  const timeSlot = findTimeSlotByTimeAndAdvisor(startTime, endTime, advisorEmail);  // This needs to be implemented
-  const advisor = findAdvisorByEmail(advisorEmail);
+//endpoint to create an appointment
 
-  // Validate that all entities were found
-  if (!student || !timeSlot || !advisor) {
-      return res.status(404).json({ message: "One or more entities not found based on the provided identifiers." });
-  }
+app.post('/api/appointments', (req, res)=>{
+    //DELETE
+    console.log("received post for appointment")
+    const {StartTime,EndTime,StudentFirstName,StudentLastName,AdvisorFirstName,AdvisorLastName,AdvisorEmail,AppointmentDescription} = req.body
+    console.log(`${StudentFirstName},${AdvisorFirstName},${StartTime}`)
 
-  const appointment = {
-      StartTime: timeSlot.startTime,
-      EndTime: timeSlot.endTime,
-      StudentFirstName: student.firstName,
-      StudentLastName: student.lastName,
-      AdvisorFirstName: advisor.firstName,
-      AdvisorLastName: advisor.lastName,
-      AdvisorEmail: advisor.email,
-      AppointmentDescription: appointmentDescription
-  };
+    //Validate required fields
+    if (!StartTime || !EndTime || !StudentFirstName || !StudentLastName ||!AdvisorFirstName || !AdvisorLastName || !AdvisorEmail || !AppointmentDescription) {
+        console.log("got request with invalid fields")
+        return res.status(400).json({ message: "All fields are required: StartTime, EndTime, StudentFirstName, StudentLastName, AdvisorFirstName, AdvisorLastName, AdvisorEmail," });
+    }
+    //make csv row
+    const newAppointment=`${StartTime},${EndTime},${StudentFirstName},${StudentLastName},${AdvisorFirstName},${AdvisorLastName},${AdvisorEmail},${AppointmentDescription}\r\n`
+    console.log(newAppointment)//delete
 
-  try {
-      writeAppointments(appointment);
-      res.json({ message: "Appointment scheduled successfully!", appointment });
-  } catch (error) {
-      res.status(500).json({ message: "Failed to create appointment due to server error.", details: error.message });
-  }
-});
+    fs.appendFile('appointments.csv', newAppointment, (err)=>{
+        if(err){
+            console.error('Error writing to CSV file:', err)
+            return res.status(500).json({ message: "Failed to add appointment due to server error." })
+        } else
+        console.log("appointment added")
+
+        res.json({ message: "Appointment added successfully!", data: req.body });
+    })
+})
+
+
+
+//endpoint to create a timeslot
 app.post('/api/timeslots', (req, res) => {
     //DELETE
     console.log("received post for timeslots")
@@ -134,14 +143,8 @@ app.post('/api/timeslots', (req, res) => {
           console.error('Error writing to CSV file:', err);
           return res.status(500).json({ message: "Failed to add time slot due to server error." });
       } else
-      console.log("appointment added")
+      console.log("time slot added")
 
-
-      //delete this
-      readAndParseCSV('timeSlots.csv', (err, data) => {
-          if(err){console.error(err)}
-          else console.log(data)
-      })
       res.json({ message: "Time slot added successfully!", data: req.body });
   });
 });
