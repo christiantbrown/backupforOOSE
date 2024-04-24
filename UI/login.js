@@ -6,7 +6,9 @@ const login = ()=>{
 
     const email=document.getElementById("email").value
     const password=document.getElementById("password").value
-    console.log(`test: email ${email} password ${password}`)
+
+
+    //IMPLEMENT API
     loginstatus = "advisor";//call api here
 
     if(email == "lead"){

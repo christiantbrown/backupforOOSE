@@ -39,31 +39,30 @@ app.get('/api/advisors', (req, res) => {
 });
 
 // Endpoint to get appointments data
-app.get('/api/appointments', (req, res) => {
+app.get('/api/appointments/:email', (req, res) => {
     readAndParseCSV('appointments.csv', (err, data) => {
         if (err) {
             res.status(500).json({ error: 'Error reading CSV file' });
             return;
         }
-        res.json(data);
+        res.json(data.filter((appt)=>appt.AdvisorEmail==req.params.email));
     });
 });
 
 // Endpoint to get students data
-app.get('/api/students', (req, res) => {
+app.get('/api/students/:email', (req, res) => {
     readAndParseCSV('students.csv', (err, data) => {
         if (err) {
             res.status(500).json({ error: 'Error reading CSV file' });
             return;
         }
-        res.json(data);
+        res.json(data.filter((student)=>student.AdvisorEmail==req.params.email));
     });
 });
 
 // Endpoint to get time slots data
 app.get('/api/timeslots/:email', (req, res) => {
 
-    console.log(req.params.email)
 
     readAndParseCSV('timeSlots.csv', (err, data) => {
         if (err) {
@@ -71,9 +70,7 @@ app.get('/api/timeslots/:email', (req, res) => {
             return;
         }
         //delete this
-        data.map((d) => {
-            console.log(d)
-        })
+
         res.json(data.filter((tslot)=>tslot.AdvisorEmail==req.params.email));
     });
 });

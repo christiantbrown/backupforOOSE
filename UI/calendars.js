@@ -21,23 +21,26 @@ const createAppointment= (appointmentcsv) =>{
 }
 
 
-dummyappointments=[
-"2023-04-30T12:00,2023-04-30T13:00,Alexander,Hamilton,James,Davis,jdavis@uta.edu,Fall Advising",
-"2023-04-31T15:00,2023-04-30T16:00,Woodrow,Wilson,Emma,Moore,emoore@uta.edu,Fall Advising",
-"2023-04-31T11:00,2023-04-31T13:00,Thomas,Jefferson,James,Davis,jdavis@uta.edu,Graduation",
-]
-
-// dummyappointments.map((str) => {
-//     console.log(createAppointment(str))
-// })
+// dummyappointments=[
+// "2023-04-30T12:00,2023-04-30T13:00,Alexander,Hamilton,James,Davis,jdavis@uta.edu,Fall Advising",
+// "2023-04-31T15:00,2023-04-30T16:00,Woodrow,Wilson,Emma,Moore,emoore@uta.edu,Fall Advising",
+// "2023-04-31T11:00,2023-04-31T13:00,Thomas,Jefferson,James,Davis,jdavis@uta.edu,Graduation",
+// ]
 
 
 
-const getAppointments = (advisorFirstName, advisorLastName) =>{
 
+const getAppointments = async (advisorFirstName, advisorLastName) =>{
+
+    appointments = await fetch(encodeURI(`http://${api_url}:${port}/api/appointments/${email}`), {
+        mode: "cors"
+    }).then((appointments) => appointments.json())
+    appointments.map((appt) => {
+        appt.StartTime = new Date(appt.StartTime)
+        appt.EndTime = new Date(appt.EndTime)
+    })
     //replace this with an API call
-    davisappointments = [dummyappointments[0], dummyappointments[2]]
-    return davisappointments.map((str) => {return createAppointment(str)})
+    return appointments
 }
 
 
@@ -55,12 +58,12 @@ const createTimeSlot = (timeslotcsv) => {
 }
 
 
-dummytimeslots=[
-    "2023-04-30T12:00,2023-04-30T13:00,James,Davis,jdavis@uta.edu",
-    "2023-04-30T15:00,2023-04-30T16:00,Emma,Moore,emoore@uta.edu",
-    "2023-04-31T11:00,2023-04-31T13:00,James,Davis,jdavis@uta.edu",
-    "2023-04-31T16:00,2023-04-31T18:00,James,Davis,jdavis@uta.edu",
-]
+// dummytimeslots=[
+//     "2023-04-30T12:00,2023-04-30T13:00,James,Davis,jdavis@uta.edu",
+//     "2023-04-30T15:00,2023-04-30T16:00,Emma,Moore,emoore@uta.edu",
+//     "2023-04-31T11:00,2023-04-31T13:00,James,Davis,jdavis@uta.edu",
+//     "2023-04-31T16:00,2023-04-31T18:00,James,Davis,jdavis@uta.edu",
+// ]
 
 const getTimeSlots = async (advisorEmail) =>{
 
@@ -74,7 +77,7 @@ const getTimeSlots = async (advisorEmail) =>{
         tslot.StartTime = new Date(tslot.StartTime)
         tslot.EndTime = new Date(tslot.EndTime)
     })
-    console.log(tslots)
+
     return tslots
 }
 
@@ -83,7 +86,7 @@ const showUpcomingTimeSlots = async ()=>{
     const timeSlotList = document.getElementById("time slots")
 
     const timeSlots= await getTimeSlots(email)
-    console.log(timeSlots)
+
 
     timeSlots.map( (tslot) => {
         slotDescription = document.createElement("div")
@@ -105,15 +108,17 @@ const submitNewTimeSlot = () => {
     window.location.replace(`./addtimeslot.html`)
 }
 
-const showUpcomingAppointments = () => {
+const showUpcomingAppointments = async () => {
 
     const appointmentList = document.getElementById("appointments")
 
-    const appointments = getAppointments(email)
+    const appointments = await getAppointments(email)
 
     appointments.map( (appt) => {
+        console.log(appt)//DELETETHIS
+
         apptDescription=document.createElement("div")
-        apptDescription.textContent=`${appt.studentLastName}, ${appt.studentFirstName}\n
+        apptDescription.textContent=`${appt.StudentLastName}, ${appt.StudentFirstName}\n
         ${appt.StartTime.toDateString()} ${appt.StartTime.getHours()}:${appt.StartTime.getMinutes()} - ${appt.EndTime.getHours()}:${appt.EndTime.getMinutes()}`
         apptDescription.classList.add("timeelement")
         appointmentList.appendChild(apptDescription)
