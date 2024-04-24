@@ -69,7 +69,7 @@ app.get('/api/timeslots/:email', (req, res) => {
             res.status(500).json({ error: 'Error reading CSV file' });
             return;
         }
-        //delete this
+
 
         res.json(data.filter((tslot)=>tslot.AdvisorEmail==req.params.email));
     });
@@ -115,7 +115,7 @@ app.post('/api/appointments', (req, res) => {
 app.post('/api/timeslots', (req, res) => {
     //DELETE
     console.log("received post for timeslots")
-    console.log(req)
+    // console.log(req)
   const { startTime, endTime, advisorFirstName, advisorLastName, email } = req.body;
   console.log(`${email}, ${startTime}`)
 
@@ -126,15 +126,22 @@ app.post('/api/timeslots', (req, res) => {
   }
 
   // Construct the CSV row
-  const newTimeSlot = `${startTime},${endTime},${advisorFirstName},${advisorLastName},${email}\n`;
+  const newTimeSlot = `${startTime},${endTime},${advisorFirstName},${advisorLastName},${email}\r\n`;
 
   // Append to the CSV file
   fs.appendFile('timeSlots.csv', newTimeSlot, (err) => {
       if (err) {
           console.error('Error writing to CSV file:', err);
           return res.status(500).json({ message: "Failed to add time slot due to server error." });
-      }
+      } else
       console.log("appointment added")
+
+
+      //delete this
+      readAndParseCSV('timeSlots.csv', (err, data) => {
+          if(err){console.error(err)}
+          else console.log(data)
+      })
       res.json({ message: "Time slot added successfully!", data: req.body });
   });
 });
