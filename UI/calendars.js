@@ -1,3 +1,4 @@
+
 const email = localStorage.getItem("AASemail")
 const password = localStorage.getItem("AASpassword")
 const accountType = localStorage.getItem("AASaccounttype")
@@ -65,6 +66,14 @@ const createTimeSlot = (timeslotcsv) => {
 //     "2023-04-31T16:00,2023-04-31T18:00,James,Davis,jdavis@uta.edu",
 // ]
 
+
+const getAdvisor = async(advisorEmail) =>{
+    advisor = await fetch(encodeURI(`http://${api_url}:${port}/api/advisors/${email}`), {
+        mode:"cors"
+    }).then((advisor)=>advisor.json())
+    return advisor
+}
+
 const getTimeSlots = async (advisorEmail) =>{
 
     //replace this with an API call
@@ -84,7 +93,7 @@ const getTimeSlots = async (advisorEmail) =>{
 //creates a list of upcoming time slots in the UI
 const showUpcomingTimeSlots = async ()=>{
     const timeSlotList = document.getElementById("time slots")
-
+    timeSlotList.innerHTML=''
     const timeSlots= await getTimeSlots(email)
 
 
@@ -96,16 +105,39 @@ const showUpcomingTimeSlots = async ()=>{
     })
 }
 
-
-const submitNewTimeSlot = () => {
+//grabs information from UI, submits new time slot, remakes UI
+const submitNewTimeSlot = async () => {
     date=document.getElementById("date").value
     StartTime=document.getElementById("startTime").value
     EndTime=document.getElementById("endTime").value
     
+
+
     console.log(`${date} ${StartTime} ${EndTime}`)
     //make an api call here, wait for status code, then redirect
+    //start, end, fname, lname, email
 
-    window.location.replace(`./addtimeslot.html`)
+    advisor = await(getAdvisor(email))
+
+    res = await fetch(encodeURI(`http://${api_url}:${port}/api/timeslots`), {
+        mode: "cors",
+        method: "POST",
+        "body":JSON.stringify({
+            "startTime":`${date}T${StartTime}`,
+            "endTime":`${date}T${EndTime}`,
+            "advisorFirstName":advisor.FirstName,
+            "advisorLastName":advisor.LastName,
+            "email":email,
+        }),
+        headers:{
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+    })
+
+    console.log(res)
+    
+    showUpcomingTimeSlots()
 }
 
 const showUpcomingAppointments = async () => {
