@@ -113,11 +113,15 @@ app.post('/api/appointments', (req, res) => {
   }
 });
 app.post('/api/timeslots', (req, res) => {
+    //DELETE
     console.log("received post for timeslots")
+    console.log(req)
   const { startTime, endTime, advisorFirstName, advisorLastName, email } = req.body;
+  console.log(`${email}, ${startTime}`)
 
   // Validate the required fields
   if (!startTime || !endTime || !advisorFirstName || !advisorLastName || !email) {
+      console.log("got request with invalid fields")
       return res.status(400).json({ message: "All fields are required: startTime, endTime, advisorFirstName, advisorLastName, email." });
   }
 
@@ -130,6 +134,7 @@ app.post('/api/timeslots', (req, res) => {
           console.error('Error writing to CSV file:', err);
           return res.status(500).json({ message: "Failed to add time slot due to server error." });
       }
+      console.log("appointment added")
       res.json({ message: "Time slot added successfully!", data: req.body });
   });
 });
