@@ -99,8 +99,8 @@ const showUpcomingTimeSlots = async ()=>{
 
 const submitNewTimeSlot = () => {
     date=document.getElementById("date").value
-    StartTime=document.getElementById("StartTime").value
-    EndTime=document.getElementById("EndTime").value
+    StartTime=document.getElementById("startTime").value
+    EndTime=document.getElementById("endTime").value
     
     console.log(`${date} ${StartTime} ${EndTime}`)
     //make an api call here, wait for status code, then redirect
